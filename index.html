@@ -4,10 +4,10 @@
 <meta name="description" content="Watch OpenApe, an autonomous AI memecoin trader, trade live on Solana. Every bag, every swap, fully on-chain.">
 <meta property="og:type" content="website"><meta property="og:url" content="https://openape.owji.org"><meta property="og:title" content="OpenApe 🦍 — AI memecoin trader, live on Solana">
 <meta property="og:description" content="An AI ape with a SOL wallet. Every buy, sell and bag is public. Watch it trade.">
-<meta property="og:image" content="https://openape.owji.org/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image" content="https://openape.owji.org/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="OpenApe: an AI ape trading memecoins live on Solana"><meta property="og:site_name" content="OpenApe">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="OpenApe 🦍 — AI memecoin trader, live on Solana">
-<meta name="twitter:description" content="An AI ape with a SOL wallet. Every buy, sell and bag is public."><meta name="twitter:image" content="https://openape.owji.org/og.png">
-<link rel="icon" type="image/svg+xml" href="/logo.svg"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><meta name="theme-color" content="#0a0c14"><text y=%22.9em%22 font-size=%2290%22>🦍</text></svg>">
+<meta name="twitter:description" content="An AI ape with a SOL wallet. Every buy, sell and bag is public."><meta name="twitter:image" content="https://openape.owji.org/og.png"><meta name="twitter:image:alt" content="OpenApe: an AI ape trading memecoins live on Solana">
+<link rel="icon" type="image/svg+xml" href="/logo.svg"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><meta name="theme-color" content="#0a0c14">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -42,6 +42,11 @@ h2{margin:30px 4px 12px;font-size:19px;display:flex;gap:10px;align-items:center}
 .grow{flex:1;min-width:0}.sub{color:var(--mut);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.r{text-align:right}
 .pill{font-size:11px;font-weight:800;padding:4px 9px;border-radius:99px;background:rgba(255,255,255,.08);color:var(--mut);display:inline-flex;gap:5px;align-items:center;min-width:86px;justify-content:center}
 .BUY{background:#b6ff3b22;color:var(--acc)}.SELL,.FAILED{background:#ff547022;color:var(--red)}.DEPOSIT{background:#3bd8ff22;color:var(--cy)}.SEND{background:#ff3bd422;color:var(--acc2)}
+.SWAP{background:#b6a0ff22;color:#c9b6ff}.RECEIVE{background:#ffd23b22;color:#ffd23b}.FEES{background:#6dff9b22;color:#6dff9b}.PENDING,.TX{background:rgba(255,255,255,.08);color:var(--mut)}
+.amt{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.via{font-size:10px;padding:1px 6px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--mut);margin-left:6px;font-weight:600}
+.note{padding:10px 16px;color:var(--mut);font-size:12px;border-top:1px solid rgba(255,255,255,.07)}.warn{color:#ffd23b}
+.ic.tok{font-size:13px;font-weight:800;font-family:"Space Grotesk",Inter,sans-serif}
+@media(max-width:520px){.wrap{padding:16px 10px 40px}.v{font-size:24px}.pill{min-width:0;padding:4px 7px}.pill i{display:none}.row{gap:9px;padding:12px}.ic{width:30px;height:30px}h1{font-size:26px}.logo{width:52px;height:52px}header{padding:14px}.addr{font-size:11.5px}}
 .up{color:var(--acc)}.dn{color:var(--red)}
 .empty{padding:38px 16px;text-align:center;color:var(--mut)}.empty i{display:block;font-size:40px;margin-bottom:10px;color:var(--acc);filter:drop-shadow(0 0 14px #b6ff3b88)}
 footer{margin-top:34px;color:var(--mut);font-size:12px;text-align:center;padding:16px}footer .btn{display:inline-flex;gap:8px;align-items:center;margin-top:10px;padding:8px 16px;border-radius:99px;background:rgba(255,255,255,.1);border:1px solid var(--gl);color:var(--txt);font-weight:700}
@@ -54,30 +59,47 @@ footer{margin-top:34px;color:var(--mut);font-size:12px;text-align:center;padding
 <div class="grid"><div class="card glass big"><div class="k"><i class="fa-solid fa-sack-dollar"></i>Net worth</div><div class="v" id="tot">—</div></div>
 <div class="card glass"><div class="k"><i class="fa-solid fa-coins"></i>SOL balance</div><div class="v" id="sol">—</div><div class="sub" id="solusd"></div></div>
 <div class="card glass"><div class="k"><i class="fa-solid fa-bag-shopping"></i>Bags held</div><div class="v" id="nb">—</div><div class="sub" id="solp"></div></div></div>
-<h2><i class="fa-solid fa-gem"></i> Bags <small>current SPL holdings</small></h2><div class="glass list" id="bags"></div>
+<h2><i class="fa-solid fa-gem"></i> Bags <small>current memecoin holdings</small></h2><div class="glass list" id="bags"></div>
 <h2><i class="fa-solid fa-scroll"></i> Ape log <small>recent transactions</small></h2><div class="glass list" id="txs"></div>
 <footer><i class="fa-solid fa-eye"></i> Read-only dashboard · Solana RPC, Jupiter & DexScreener · refreshes every 30s · not financial advice 🦍<br>
 <a class="btn" href="#" onclick="share();return false"><i class="fa-brands fa-x-twitter"></i> Share on X</a></footer></div>
 <script>
 const $=id=>document.getElementById(id);
-const usd=n=>n==null?"—":"$"+(n>=1?n.toLocaleString(undefined,{maximumFractionDigits:2}):n.toPrecision(3));
-const num=n=>Math.abs(n)>=1e6?(n/1e6).toFixed(2)+"M":Math.abs(n)>=1e3?(n/1e3).toFixed(2)+"K":(+n).toLocaleString(undefined,{maximumFractionDigits:4});
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const ago=t=>{if(!t)return"";const s=Date.now()/1e3-t;return s<60?Math.floor(s)+"s ago":s<3600?Math.floor(s/60)+"m ago":s<86400?Math.floor(s/3600)+"h ago":Math.floor(s/86400)+"d ago"};
-function share(){open("https://x.com/intent/tweet?text="+encodeURIComponent("Watching an AI ape trade memecoins live on Solana 🦍🍌")+"&url="+encodeURIComponent(location.origin))}
-async function load(){try{const d=await (await fetch("/api/wallet")).json();if(d.error)throw new Error(d.error);
-$("tot").textContent=usd(d.totalUsd||0);$("sol").textContent=num(d.sol)+" ◎";$("solusd").textContent=d.solPrice?usd(d.sol*d.solPrice)+" · SOL "+usd(d.solPrice):"";
-$("nb").textContent=d.tokens.length;$("solp").textContent=d.solCh24!=null?"SOL 24h "+(d.solCh24>=0?"+":"")+d.solCh24.toFixed(2)+"%":"";
-$("bags").innerHTML=d.tokens.length?d.tokens.map(t=>`<div class="row">${t.icon?`<img class="ic" src="${esc(t.icon)}" alt="">`:`<div class="ic"><i class="fa-solid fa-coins"></i></div>`}
-<div class="grow"><b>${esc(t.symbol)}</b><div class="sub">${esc(t.name)} · <a href="https://solscan.io/token/${t.mint}" target="_blank" rel="noopener">${t.mint.slice(0,6)}…</a>${t.dex?` · <a href="${esc(t.dex)}" target="_blank" rel="noopener">chart</a>`:""}</div></div>
+const usd=n=>n==null?"—":"$"+(n>=1?n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):n>=.01?n.toFixed(2):n.toPrecision(2));
+const num=n=>{const a=Math.abs(n);return a>=1e9?(n/1e9).toFixed(2)+"B":a>=1e6?(n/1e6).toFixed(2)+"M":a>=1e3?(n/1e3).toFixed(2)+"K":(+n).toLocaleString(undefined,{maximumFractionDigits:a<.01?6:4})};
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safeUrl=u=>/^https:\/\//i.test(u||"")?esc(u):"";
+const ago=t=>{if(!t)return"";const s=Math.max(0,Date.now()/1e3-t);return s<60?Math.floor(s)+"s ago":s<3600?Math.floor(s/60)+"m ago":s<86400?Math.floor(s/3600)+"h ago":Math.floor(s/86400)+"d ago"};
+const when=t=>t?new Date(t*1e3).toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"}):"";
+const KIND={BUY:["BUY","fa-arrow-trend-up"],SELL:["SELL","fa-arrow-trend-down"],SWAP:["SWAP","fa-right-left"],RECEIVE:["AIRDROP","fa-parachute-box"],SEND:["SEND","fa-paper-plane"],DEPOSIT:["DEPOSIT","fa-arrow-down"],FEES:["FEES","fa-hand-holding-dollar"],PENDING:["…","fa-spinner"],FAILED:["FAILED","fa-circle-xmark"],TX:["TX","fa-circle"]};
+function share(){open("https://x.com/intent/tweet?text="+encodeURIComponent("Watching an AI ape trade memecoins live on Solana 🦍🍌")+"&url="+encodeURIComponent(location.origin),"_blank","noopener")}
+function tokIcon(t){const u=safeUrl(t.icon),s=esc(String(t.symbol||"?").slice(0,2));return u?`<img class="ic" src="${u}" alt="" loading="lazy" referrerpolicy="no-referrer" data-s="${s}" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'ic tok',textContent:this.dataset.s}))">`:`<div class="ic tok">${s}</div>`}
+function chg(c,signed){return `<span class="${c.delta>0?"up":"dn"}">${signed?(c.delta>0?"+":"−"):""}${num(Math.abs(c.delta))} ${esc(c.symbol)}</span>`}
+function txLine(t){
+  const ins=t.changes.filter(c=>c.delta>0),outs=t.changes.filter(c=>c.delta<0),f=a=>a.map(chg).join(", ");
+  switch(t.kind){
+    case"BUY":return`Bought ${f(ins)}`;case"SELL":return`Sold ${f(outs)}`;case"SWAP":return`${f(outs)} → ${f(ins)}`;
+    case"RECEIVE":return`Received ${f(ins)}`;case"SEND":return outs.length?`Sent ${f(outs)}`:"Sent SOL";
+    case"FEES":return"Claimed creator fees";case"DEPOSIT":return"Received SOL";case"PENDING":return'<span class="sub">loading details…</span>';
+    case"FAILED":return'<span class="sub">transaction failed</span>';default:return t.changes.length?t.changes.map(c=>chg(c,1)).join(", "):'<span class="sub">other</span>'}}
+let last=null;
+async function load(){try{const r=await fetch("/api/wallet");const d=await r.json();if(!r.ok||d.error)throw new Error(d.error||r.status);last=d;
+$("tot").textContent=d.totalUsd!=null?usd(d.totalUsd):"—";$("sol").textContent=d.sol!=null?num(d.sol)+" ◎":"—";$("solusd").textContent=d.solPrice&&d.sol!=null?usd(d.sol*d.solPrice)+" · SOL "+usd(d.solPrice):"";
+const bagUsd=d.tokens.reduce((a,t)=>a+(t.usd||0),0);
+$("nb").textContent=d.tokensOk?d.tokens.length:"—";$("solp").textContent=d.tokensOk&&d.tokens.length?usd(bagUsd)+" in bags":(d.solCh24!=null?"SOL 24h "+(d.solCh24>=0?"+":"")+d.solCh24.toFixed(2)+"%":"");
+const notes=[];if(d.tokensPartial)notes.push('<span class="warn"><i class="fa-solid fa-triangle-exclamation"></i> Solana RPCs are rate limiting right now, so this shows the bags from recent trades only. Full list on the next refresh.</span>');if(d.tokensStale)notes.push('<span class="warn"><i class="fa-solid fa-triangle-exclamation"></i> Showing last known bags, live refresh failed.</span>');
+if(d.spam&&d.spam.length)notes.push(`<i class="fa-solid fa-shield-halved"></i> ${d.spam.length} frozen or unpriced airdrop${d.spam.length>1?"s":""} hidden (likely spam).`);
+$("bags").innerHTML=!d.tokensOk?`<div class="empty"><i class="fa-solid fa-satellite-dish"></i>Couldn't reach Solana to load the bags. Retrying shortly…</div>`
+:(d.tokens.length?d.tokens.map(t=>`<div class="row">${tokIcon(t)}
+<div class="grow"><b>${esc(t.symbol)}</b><div class="sub">${esc(t.name)} · <a href="https://solscan.io/token/${esc(t.mint)}" target="_blank" rel="noopener">${esc(t.mint.slice(0,6))}…</a>${safeUrl(t.dex)?` · <a href="${safeUrl(t.dex)}" target="_blank" rel="noopener">chart</a>`:""}</div></div>
 <div class="r"><b>${usd(t.usd)}</b><div class="sub">${num(t.amount)} ${t.ch24!=null?`<span class="${t.ch24>=0?"up":"dn"}">${t.ch24>=0?"+":""}${t.ch24.toFixed(1)}%</span>`:""}</div></div></div>`).join("")
-:`<div class="empty"><i class="fa-solid fa-box-open"></i>No bags yet. The ape is ${d.sol>0?"loaded with SOL and stalking its first memecoin":"waiting for bananas (SOL) to land"}.</div>`;
-$("txs").innerHTML=d.txs.length?d.txs.map(t=>`<div class="row"><span class="pill ${t.ok?t.kind:"FAILED"}"><i class="fa-solid ${({BUY:"fa-arrow-trend-up",SELL:"fa-arrow-trend-down",DEPOSIT:"fa-arrow-down",SEND:"fa-paper-plane"})[t.ok?t.kind:""]||"fa-circle-xmark"}"></i>${t.ok?t.kind:"FAILED"}</span>
-<div class="grow"><div>${t.changes.length?t.changes.map(c=>`<span class="${c.delta>0?"up":"dn"}">${c.delta>0?"+":""}${num(c.delta)} ${esc(c.symbol)}</span>`).join(" · "):"&nbsp;"}</div>
-<div class="sub"><a href="https://solscan.io/tx/${t.sig}" target="_blank" rel="noopener">${t.sig.slice(0,10)}…</a> · ${ago(t.time)}</div></div>
-<div class="r ${t.sol>0?"up":t.sol<0?"dn":""}">${t.sol!=null?(t.sol>0?"+":"")+num(t.sol)+" ◎":""}</div></div>`).join("")
+:`<div class="empty"><i class="fa-solid fa-box-open"></i>No bags right now. The ape is ${d.sol>0?"loaded with SOL and stalking its next memecoin":"waiting for bananas (SOL) to land"}.</div>`)+(notes.length?`<div class="note">${notes.join("<br>")}</div>`:"");
+$("txs").innerHTML=d.txs.length?d.txs.map(t=>{const k=KIND[t.kind]||KIND.TX;return`<div class="row"><span class="pill ${esc(t.kind)}"><i class="fa-solid ${k[1]}"></i>${k[0]}</span>
+<div class="grow"><div class="amt">${txLine(t)}${t.via?`<span class="via">${esc(t.via)}</span>`:""}</div>
+<div class="sub"><a href="https://solscan.io/tx/${esc(t.sig)}" target="_blank" rel="noopener">${esc(t.sig.slice(0,8))}…</a> · <span title="${esc(when(t.time))}">${ago(t.time)} · ${esc(when(t.time))}</span></div></div>
+<div class="r ${t.sol>0?"up":t.sol<0?"dn":""}">${t.sol!=null&&Math.abs(t.sol)>=1e-9?(t.sol>0?"+":"−")+num(Math.abs(t.sol))+" ◎":""}</div></div>`}).join("")
 :`<div class="empty"><i class="fa-solid fa-hourglass-half"></i>No trades yet. The ape is sharpening its claws. Check back soon.</div>`;
 $("upd").textContent="live · updated "+new Date(d.updated).toLocaleTimeString();
-}catch(e){$("upd").textContent="RPC hiccup, retrying…"}}
+}catch(e){console.warn("OpenApe refresh failed:",e);$("upd").textContent=last?"retrying… (last "+new Date(last.updated).toLocaleTimeString()+")":"RPC hiccup, retrying…"}}
 load();setInterval(load,30000);
 </script></body></html>
