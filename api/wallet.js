@@ -70,6 +70,17 @@ async function prices(mints) {
   return out;
 }
 
+// SOL/USD with fallbacks (Jupiter's price API is often rate limited from Vercel).
+async function solPriceFallback() {
+  const srcs = [
+    async () => { const j = await fetchJson("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd&include_24hr_change=true", {}, 4000); return { usd: j.solana.usd, ch24: j.solana.usd_24h_change ?? null }; },
+    async () => { const j = await fetchJson("https://api.coinbase.com/v2/prices/SOL-USD/spot", {}, 4000); return { usd: Number(j.data.amount), ch24: null }; },
+    async () => { const j = await fetchJson("https://api.dexscreener.com/tokens/v1/solana/" + SOL_MINT, {}, 4000); const p = j.find(p => p.baseToken?.address === SOL_MINT && /^USD/.test(p.quoteToken?.symbol || "")); return { usd: Number(p.priceUsd), ch24: p.priceChange?.h24 ?? null }; },
+  ];
+  for (const f of srcs) { try { const r = await f(); if (r.usd > 0) return r; } catch {} }
+  return null;
+}
+
 async function meta(mints) {
   const now = Date.now();
   const need = mints.filter(m => !cache.meta.has(m) || now - cache.meta.get(m).at > 60000);
@@ -163,6 +174,8 @@ module.exports = async (req, res) => {
     tokens.sort((a, b) => (b.usd || 0) - (a.usd || 0));
     for (const t of txs) for (const c of t.changes) c.symbol = md[c.mint]?.symbol || c.mint.slice(0, 4) + "…";
 
+    if (!pr[SOL_MINT]) { const f = await solPriceFallback(); if (f) pr[SOL_MINT] = f; else if (cache.solPrice) pr[SOL_MINT] = cache.solPrice; else errors.push("sol price: all sources failed"); }
+    if (pr[SOL_MINT]) cache.solPrice = pr[SOL_MINT];
     const solPrice = pr[SOL_MINT]?.usd ?? null;
     const totalUsd = solPrice != null && sol != null ? sol * solPrice + tokens.reduce((a, t) => a + (t.usd || 0), 0) : null;
     if (sol == null && !tokenList && !sigs) throw new Error(errors.join("; ") || "all data sources failed");
